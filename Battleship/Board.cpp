@@ -1,17 +1,10 @@
-#include "Board.h"
 #include <iostream>
+
+#include "Board.h"
 
 
 CBoard::CBoard() :
     mainBoard(BOARD_SIZE, TBoardLine(BOARD_SIZE, CBoardField())) {}
-
-
-CBoardField::EFieldState CBoard::GetFieldState(const SCoordinates shoot_coordinates) const {
-    return mainBoard.
-        at(shoot_coordinates.coord_x).
-        at(shoot_coordinates.coord_y).
-        GetState();
-}
 
 
 void CBoard::PlaceShip(CShip new_ship) {
@@ -48,6 +41,7 @@ void CBoard::PlaceShip(CShip new_ship) {
     }
 }
 
+
 void CBoard::Print() {
     for (auto& lane_it = mainBoard.rbegin(); lane_it != mainBoard.rend(); ++lane_it) {
         for (auto& field_it = lane_it->begin(); field_it != lane_it->end(); ++field_it) {
@@ -59,15 +53,35 @@ void CBoard::Print() {
 }
 
 
-void CBoard::PlaceShipUnit(SCoordinates unit_coordinates) {
-    mainBoard.
-        at(unit_coordinates.coord_y).
-        at(unit_coordinates.coord_x).
-        SetState(CBoardField::EFieldState::FILLED);
+CBoardField::EFieldState CBoard::ProcessInputShoot(SCoordinates shoot_coordinates) {
+    const auto cur_field_state = GetFieldState(shoot_coordinates);
+
+    if (cur_field_state == CBoardField::EFieldState::EMPTY) {
+        GetBoardField(shoot_coordinates).SetState(CBoardField::EFieldState::HIT);
+    }
+
+    return cur_field_state;
 }
 
 
-bool CBoard::IsFieldAppropriate(const SCoordinates& field_coordinates) const {
+CBoardField::EFieldState CBoard::GetFieldState(const SCoordinates shoot_coordinates) {
+    return GetBoardField(shoot_coordinates).GetState();
+}
+
+
+CBoardField& CBoard::GetBoardField(const SCoordinates field_coordinates) {
+    return mainBoard.
+        at(field_coordinates.coord_y).
+        at(field_coordinates.coord_x);
+}
+
+
+void CBoard::PlaceShipUnit(const SCoordinates& unit_coordinates) {
+    GetBoardField(unit_coordinates).SetState(CBoardField::EFieldState::FILLED);
+}
+
+
+bool CBoard::IsFieldAppropriate(const SCoordinates& field_coordinates) {
     return GetFieldState(field_coordinates) == CBoardField::EFieldState::EMPTY;
 }
 
@@ -81,13 +95,13 @@ bool CBoard::IsPossibleToPlaceShip(CShip ship) {
     if (IsCoordinateInBoardBounds(ship_head_x) && IsCoordinateInBoardBounds(ship_head_y)) {
         if (pos_orientation == CShip::EBoardOrientation::HORIZONTAL) {
             is_possible = IsPossibleToPlaceShipInOneOrientation(ship_head_y,
-                                                      ship_head_x,
-                                                      ship.GetShipSize());
+                                                                ship_head_x,
+                                                                ship.GetShipSize());
         }
         else { //VERTICAL
             is_possible = IsPossibleToPlaceShipInOneOrientation(ship_head_x,
-                                                      ship_head_y,
-                                                      ship.GetShipSize());
+                                                                ship_head_y,
+                                                                ship.GetShipSize());
         }
 
     }
@@ -139,7 +153,7 @@ bool CBoard::IsPossibleToPlaceShipInOneOrientation(SCoordinates::TCoord ship_hea
 bool CBoard::IsCoordinateInBoardBounds(SCoordinates::TCoord coord) {
     bool is_in_bounds = true;
 
-    if (coord < 0 || coord > (BOARD_SIZE - 1)) {
+    if (coord < 0 || coord >(BOARD_SIZE - 1)) {
         is_in_bounds = false;
     }
 

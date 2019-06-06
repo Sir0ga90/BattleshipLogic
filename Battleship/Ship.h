@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "Coordinates.h"
 
 /*
@@ -11,9 +14,12 @@
  * 000000000000
  */
 
+class CShipUnit;
+
 class CShip {
 public:
     using TShipSize = uint16_t;
+    using TShipUnitContainer = std::vector<CShipUnit>;
 
     enum class EBoardOrientation {
         HORIZONTAL,
@@ -35,9 +41,35 @@ public:
     TShipSize GetShipSize();
     SCoordinates GetPivotPoint();
     EBoardOrientation GetBoardOrientation();
+    bool IsSunk();
 
 private:
-    TShipSize ship_size;
-    SCoordinates pivot_point;
-    EBoardOrientation position_orientation;
+    TShipSize shipSize;
+    SCoordinates pivotPoint;
+    EBoardOrientation positionOrientation;
+    TShipUnitContainer shipUnits;
+
+};
+
+
+//===============================================================
+class CShipUnit {
+public:
+    CShipUnit();
+    ~CShipUnit() = default;
+
+    using TShipPtr = std::shared_ptr<CShip>;
+
+    enum class EState {
+        INTACT,
+        HIT
+    };
+
+
+    void SetShip(TShipPtr owner_ship);
+    EState GetState() const;
+
+private:
+    TShipPtr ship;
+    EState curState;
 };

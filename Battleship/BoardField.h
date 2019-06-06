@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 
 class CBoardField
 {
@@ -11,13 +14,17 @@ public:
     enum class EFieldState
     {
         EMPTY,
-        FILLED
+        FILLED,
+        HIT
     };
+
+    using TStateAnswerMap = std::map<EFieldState, std::string>;
 
     EFieldState GetState() const;
     void SetState(EFieldState new_state);
 
 private:
     
-    EFieldState cur_state;
+    EFieldState curState;
+    static const TStateAnswerMap stateAnswerMap;
 };

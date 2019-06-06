@@ -21,17 +21,20 @@ public:
 
     void PlaceShip(CShip new_ship);
     void Print();
+    CBoardField::EFieldState ProcessInputShoot(SCoordinates shoot_coordinates);
 
 private:
-    CBoardField::EFieldState GetFieldState(const SCoordinates shoot_coordinates) const;
-    void PlaceShipUnit(SCoordinates unit_coordinates);
-    bool IsFieldAppropriate(const SCoordinates& field_coordinates) const;
+    CBoardField& GetBoardField(const SCoordinates field_coordinates);
+    CBoardField::EFieldState GetFieldState(const SCoordinates shoot_coordinates);
+    void PlaceShipUnit(const SCoordinates& unit_coordinates);
+    bool IsFieldAppropriate(const SCoordinates& field_coordinates);
     bool IsPossibleToPlaceShip(CShip ship);
     bool IsPossibleToPlaceShipInOneOrientation(SCoordinates::TCoord ship_head_a,
                                                SCoordinates::TCoord ship_head_b, 
                                                CShip::TShipSize ship_size);
 
     bool IsCoordinateInBoardBounds(SCoordinates::TCoord coord);
+
 
     TBoardFields mainBoard;
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Board.h"
+#include "Player.h"
 
 /*Battleship draft. TODO:
  * - add player class;
@@ -36,6 +37,10 @@ void boardPlaceShipTest()
     std::cout << "Place ship{x = 3, y = 4}: ";
     board_of_one_player.PlaceShip(dummy_ship_2);
     board_of_one_player.Print();
+
+    CPlayer pl1{};
+
+    std::cout << static_cast<int>(pl1.ProcessInputShoot(pl1.Shoot())) << "\n";
 
     system("pause");
 }

@@ -149,13 +149,16 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="BoardField.h" />
     <ClInclude Include="Coordinates.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="ShipUnit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="BoardField.cpp" />
     <ClCompile Include="Coordinates.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Ship.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
