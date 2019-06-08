@@ -56,7 +56,7 @@ void CBoard::Print() {
 
 
 CBoardField::EState CBoard::ProcessInputShoot(SCoordinates shoot_coordinates) {
-    auto cur_field = GetBoardField(shoot_coordinates);
+    auto& cur_field = GetBoardField(shoot_coordinates);
     auto cur_field_state = cur_field.GetState();
 
     if (cur_field_state == CBoardField::EState::EMPTY) {
@@ -89,7 +89,7 @@ CBoardField& CBoard::GetBoardField(const SCoordinates field_coordinates) {
 
 void CBoard::PlaceShipUnit(const SCoordinates& unit_coordinates,
                            CShipUnit::TShipPtr& owner_ship) {
-    auto cur_field = GetBoardField(unit_coordinates);
+    auto& cur_field = GetBoardField(unit_coordinates);
     cur_field.SetState(CBoardField::EState::FILLED);
     
     CShipUnit ship_unit{};
@@ -181,7 +181,7 @@ bool CBoard::IsCoordinateInBoardBounds(SCoordinates::TCoord coord) {
 
 void CBoard::ProcessShipHit(CBoardField::EState& cur_field_state,
                             const SCoordinates& shoot_coordinates) {
-    const auto cur_ship_state =
+    const auto& cur_ship_state =
         GetBoardField(shoot_coordinates).GetShipUnit().GetShipState();
 
     switch (cur_ship_state) {

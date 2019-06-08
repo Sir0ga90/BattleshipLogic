@@ -16,8 +16,7 @@ void boardPlaceShipTest();
 
 
 //============================================
-int main()
-{
+int main() {
     boardPlaceShipTest();
 
     return 0;
@@ -25,8 +24,7 @@ int main()
 
 
 //============================================
-void boardPlaceShipTest()
-{
+void boardPlaceShipTest() {
     CBoard board_of_one_player{};
     const CShip dummy_ship_1{3, SCoordinates(4, 3), CShip::EBoardOrientation::HORIZONTAL};
     const CShip dummy_ship_2{2, SCoordinates(3, 4), CShip::EBoardOrientation::VERTICAL};
@@ -41,7 +39,9 @@ void boardPlaceShipTest()
 
     pl1.PrintPlayerBoard();
 
-    std::cout << static_cast<int>(pl1.ProcessInputShoot(pl1.Shoot())) << "\n";
+    while (true) {
+        std::cout << static_cast<int>(pl1.ProcessInputShoot(pl1.Shoot())) << "\n";
+    }
 
 
 #ifdef _NDEBUG
