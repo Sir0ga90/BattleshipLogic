@@ -20,10 +20,19 @@ SCoordinates CPlayer::Shoot() {
     return SCoordinates(x, y);
 }
 
-CBoardField::EFieldState CPlayer::ProcessInputShoot(SCoordinates& shoot_coordinates) {
+CBoardField::EState CPlayer::ProcessInputShoot(SCoordinates& shoot_coordinates) {
     return playerBoard.ProcessInputShoot(shoot_coordinates);
 }
 
-std::string CPlayer::TranslateShootResult(CBoardField::EFieldState state) {
+void CPlayer::PlaceShip(CShip new_ship) {
+    playerBoard.PlaceShip(new_ship);
+}
+
+void CPlayer::PrintPlayerBoard()
+{
+    playerBoard.Print();
+}
+
+std::string CPlayer::TranslateShootResult(CBoardField::EState state) {
     return std::string();   //TODO
 }

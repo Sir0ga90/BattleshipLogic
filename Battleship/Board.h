@@ -13,6 +13,7 @@ public:
 
     using TBoardLine = std::vector<CBoardField>;
     using TBoardFields = std::vector<TBoardLine>;
+    using TShipContainer = std::vector<std::shared_ptr<CShip>>;
 
     static constexpr uint8_t BOARD_SIZE = 10u;
 
@@ -21,20 +22,27 @@ public:
 
     void PlaceShip(CShip new_ship);
     void Print();
-    CBoardField::EFieldState ProcessInputShoot(SCoordinates shoot_coordinates);
+    CBoardField::EState ProcessInputShoot(SCoordinates shoot_coordinates);
 
 private:
     CBoardField& GetBoardField(const SCoordinates field_coordinates);
-    CBoardField::EFieldState GetFieldState(const SCoordinates shoot_coordinates);
-    void PlaceShipUnit(const SCoordinates& unit_coordinates);
+    CBoardField::EState GetFieldState(const SCoordinates shoot_coordinates);
+    void PlaceShipUnit(const SCoordinates& unit_coordinates,
+                       CShipUnit::TShipPtr& owner_ship);
+
     bool IsFieldAppropriate(const SCoordinates& field_coordinates);
     bool IsPossibleToPlaceShip(CShip ship);
     bool IsPossibleToPlaceShipInOneOrientation(SCoordinates::TCoord ship_head_a,
-                                               SCoordinates::TCoord ship_head_b, 
+                                               SCoordinates::TCoord ship_head_b,
                                                CShip::TShipSize ship_size);
 
     bool IsCoordinateInBoardBounds(SCoordinates::TCoord coord);
 
+    void ProcessShipHit(CBoardField::EState& cur_field_state,
+                        const SCoordinates& shoot_coordinates);
+
 
     TBoardFields mainBoard;
+    TShipContainer ships;
+
 };

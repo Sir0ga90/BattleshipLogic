@@ -8,11 +8,13 @@ CBoard::CBoard() :
 
 
 void CBoard::PlaceShip(CShip new_ship) {
-    const auto ship_head = new_ship.GetPivotPoint();
-
     if (IsPossibleToPlaceShip(new_ship)) {
+        auto ship = std::make_shared<CShip>(new_ship);
 
-        PlaceShipUnit(ship_head);
+        ships.push_back(ship);
+
+        const auto ship_head = new_ship.GetPivotPoint();
+        PlaceShipUnit(ship_head, ship);
 
         const auto ship_size = new_ship.GetShipSize();
 
@@ -24,11 +26,11 @@ void CBoard::PlaceShip(CShip new_ship) {
 
                 if (pos_orientation == CShip::EBoardOrientation::HORIZONTAL) {
                     next_ship_unit.coord_x--;
-                    PlaceShipUnit(next_ship_unit);
+                    PlaceShipUnit(next_ship_unit, ship);
                 }
                 else { //VERTICAL
                     next_ship_unit.coord_y--;
-                    PlaceShipUnit(next_ship_unit);
+                    PlaceShipUnit(next_ship_unit, ship);
                 }
             }
         }
@@ -53,18 +55,27 @@ void CBoard::Print() {
 }
 
 
-CBoardField::EFieldState CBoard::ProcessInputShoot(SCoordinates shoot_coordinates) {
-    const auto cur_field_state = GetFieldState(shoot_coordinates);
+CBoardField::EState CBoard::ProcessInputShoot(SCoordinates shoot_coordinates) {
+    auto cur_field = GetBoardField(shoot_coordinates);
+    auto cur_field_state = cur_field.GetState();
 
-    if (cur_field_state == CBoardField::EFieldState::EMPTY) {
-        GetBoardField(shoot_coordinates).SetState(CBoardField::EFieldState::HIT);
+    if (cur_field_state == CBoardField::EState::EMPTY) {
+        cur_field.SetState(CBoardField::EState::HIT);
+    }
+    else if (cur_field_state == CBoardField::EState::FILLED) {
+        ProcessShipHit(cur_field_state, shoot_coordinates);
+
+        cur_field.SetState(CBoardField::EState::HIT);
+    }
+    else {
+        //do nothing
     }
 
     return cur_field_state;
 }
 
 
-CBoardField::EFieldState CBoard::GetFieldState(const SCoordinates shoot_coordinates) {
+CBoardField::EState CBoard::GetFieldState(const SCoordinates shoot_coordinates) {
     return GetBoardField(shoot_coordinates).GetState();
 }
 
@@ -76,13 +87,20 @@ CBoardField& CBoard::GetBoardField(const SCoordinates field_coordinates) {
 }
 
 
-void CBoard::PlaceShipUnit(const SCoordinates& unit_coordinates) {
-    GetBoardField(unit_coordinates).SetState(CBoardField::EFieldState::FILLED);
+void CBoard::PlaceShipUnit(const SCoordinates& unit_coordinates,
+                           CShipUnit::TShipPtr& owner_ship) {
+    auto cur_field = GetBoardField(unit_coordinates);
+    cur_field.SetState(CBoardField::EState::FILLED);
+    
+    CShipUnit ship_unit{};
+
+    ship_unit.SetShip(owner_ship);
+    cur_field.SetShipUnit(ship_unit);
 }
 
 
 bool CBoard::IsFieldAppropriate(const SCoordinates& field_coordinates) {
-    return GetFieldState(field_coordinates) == CBoardField::EFieldState::EMPTY;
+    return GetFieldState(field_coordinates) == CBoardField::EState::EMPTY;
 }
 
 
@@ -158,5 +176,26 @@ bool CBoard::IsCoordinateInBoardBounds(SCoordinates::TCoord coord) {
     }
 
     return is_in_bounds;
+}
+
+
+void CBoard::ProcessShipHit(CBoardField::EState& cur_field_state,
+                            const SCoordinates& shoot_coordinates) {
+    const auto cur_ship_state =
+        GetBoardField(shoot_coordinates).GetShipUnit().GetShipState();
+
+    switch (cur_ship_state) {
+        case CShip::ESate::SHOT_DOWN:
+        {
+            cur_field_state = CBoardField::EState::SHOT_DOWN;
+        }
+        case CShip::ESate::SUNK:
+        {
+            cur_field_state = CBoardField::EState::SUNK;
+        }
+        default:
+            break;
+    }
+
 }
 

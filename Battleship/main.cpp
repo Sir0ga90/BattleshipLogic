@@ -31,17 +31,22 @@ void boardPlaceShipTest()
     const CShip dummy_ship_1{3, SCoordinates(4, 3), CShip::EBoardOrientation::HORIZONTAL};
     const CShip dummy_ship_2{2, SCoordinates(3, 4), CShip::EBoardOrientation::VERTICAL};
 
+    CPlayer pl1{};
+
     std::cout << "Place ship{x = 4, y = 3}: ";
-    board_of_one_player.PlaceShip(dummy_ship_1);
+    pl1.PlaceShip(dummy_ship_1);
 
     std::cout << "Place ship{x = 3, y = 4}: ";
-    board_of_one_player.PlaceShip(dummy_ship_2);
-    board_of_one_player.Print();
+    pl1.PlaceShip(dummy_ship_2);
 
-    CPlayer pl1{};
+    pl1.PrintPlayerBoard();
 
     std::cout << static_cast<int>(pl1.ProcessInputShoot(pl1.Shoot())) << "\n";
 
+
+#ifdef _NDEBUG
     system("pause");
+#endif
+
 }
 

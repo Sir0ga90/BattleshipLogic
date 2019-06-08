@@ -26,6 +26,13 @@ CShip::EBoardOrientation CShip::GetBoardOrientation() {
     return positionOrientation;
 }
 
+
+void CShip::SetShipUnit(CShipUnit new_unit) {
+    new_unit.SetShip(shared_from_this());
+    shipUnits.push_back(new_unit);
+}
+
+
 bool CShip::IsSunk() {
     bool is_sunk = true;
 
@@ -36,6 +43,10 @@ bool CShip::IsSunk() {
     }
 
     return is_sunk;
+}
+
+CShip::ESate CShip::GetState() const {
+    return curState;
 }
 
 
@@ -51,4 +62,8 @@ void CShipUnit::SetShip(TShipPtr owner_ship) {
 
 CShipUnit::EState CShipUnit::GetState() const {
     return curState;
+}
+
+CShip::ESate CShipUnit::GetShipState() const {
+    return ship->GetState();
 }

@@ -14,15 +14,17 @@ public:
     CPlayer() = default;
     ~CPlayer() = default;
 
-    using TShipContainer = std::vector<std::shared_ptr<CShip>>;
 
     SCoordinates Shoot();
-    CBoardField::EFieldState ProcessInputShoot(SCoordinates& shoot_coordinates);
+    CBoardField::EState ProcessInputShoot(SCoordinates& shoot_coordinates);
+    void PlaceShip(CShip new_ship);
+    void PrintPlayerBoard();
 
 private:
+    static constexpr auto MAX_SHIP_NUBMER = 2u;
+
     CBoard playerBoard;
     CBoard enemyBoard;
 
-    std::string TranslateShootResult(CBoardField::EFieldState state);
-    TShipContainer ships;
+    std::string TranslateShootResult(CBoardField::EState state);
 };

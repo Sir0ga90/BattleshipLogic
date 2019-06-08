@@ -3,6 +3,8 @@
 #include <map>
 #include <string>
 
+#include "Ship.h"
+
 
 class CBoardField
 {
@@ -11,20 +13,26 @@ public:
     CBoardField();
     ~CBoardField() = default;
 
-    enum class EFieldState
+    enum class EState
     {
         EMPTY,
         FILLED,
-        HIT
+        HIT,
+        SHOT_DOWN,
+        SUNK,
     };
 
-    using TStateAnswerMap = std::map<EFieldState, std::string>;
+    using TStateAnswerMap = std::map<EState, std::string>;
 
-    EFieldState GetState() const;
-    void SetState(EFieldState new_state);
+    void SetState(EState new_state);
+    EState GetState() const;
+
+    void SetShipUnit(CShipUnit new_ship_unit);
+    CShipUnit& GetShipUnit();
 
 private:
     
-    EFieldState curState;
+    EState curState;
     static const TStateAnswerMap stateAnswerMap;
+    CShipUnit shipUnit;
 };

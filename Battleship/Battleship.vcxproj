@@ -151,7 +151,6 @@
     <ClInclude Include="Coordinates.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Ship.h" />
-    <ClInclude Include="ShipUnit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
