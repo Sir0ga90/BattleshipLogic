@@ -2,7 +2,6 @@
 
 
 #include  <string>
-#include  <memory>
 
 #include "Board.h"
 #include "Coordinates.h"
@@ -17,11 +16,14 @@ public:
 
     SCoordinates Shoot();
     CBoardField::EState ProcessInputShoot(SCoordinates& shoot_coordinates);
-    void PlaceShip(CShip new_ship);
+    bool PlaceShip(CShip new_ship);
     void PrintPlayerBoard();
+    bool IsLost();
+    void PlaceNShips();
+
+    static constexpr auto MAX_SHIP_NUMBER = 2u;
 
 private:
-    static constexpr auto MAX_SHIP_NUBMER = 2u;
 
     CBoard playerBoard;
     CBoard enemyBoard;

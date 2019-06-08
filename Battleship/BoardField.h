@@ -17,7 +17,6 @@ public:
     {
         EMPTY,
         FILLED,
-        HIT,
         SHOT_DOWN,
         SUNK,
     };
@@ -27,12 +26,12 @@ public:
     void SetState(EState new_state);
     EState GetState() const;
 
-    void SetShipUnit(CShipUnit new_ship_unit);
-    CShipUnit& GetShipUnit();
+    void SetShipUnit(CShip::TShipUnitPtr& new_ship_unit);
+    CShip::TShipUnitPtr& GetShipUnit();
 
 private:
     
     EState curState;
     static const TStateAnswerMap stateAnswerMap;
-    CShipUnit shipUnit;
+    CShip::TShipUnitPtr shipUnit;
 };

@@ -2,22 +2,21 @@
 
 #include "Board.h"
 #include "Player.h"
+#include "GameInterface.h"
 
 /*Battleship draft. TODO:
- * - add player class;
- * - add shooting;
  * - add main game loop;
- * - add ship sets;
  * - add chars to coordinates
 */
 
 
 void boardPlaceShipTest();
+void testGameInterface();
 
 
 //============================================
 int main() {
-    boardPlaceShipTest();
+    testGameInterface();
 
     return 0;
 }
@@ -26,7 +25,7 @@ int main() {
 //============================================
 void boardPlaceShipTest() {
     CBoard board_of_one_player{};
-    const CShip dummy_ship_1{3, SCoordinates(4, 3), CShip::EBoardOrientation::HORIZONTAL};
+    const CShip dummy_ship_1{5, SCoordinates(4, 3), CShip::EBoardOrientation::HORIZONTAL};
     const CShip dummy_ship_2{2, SCoordinates(3, 4), CShip::EBoardOrientation::VERTICAL};
 
     CPlayer pl1{};
@@ -47,6 +46,13 @@ void boardPlaceShipTest() {
 #ifdef _NDEBUG
     system("pause");
 #endif
+
+}
+
+
+void testGameInterface() {
+    CGameInterface game_interface{};
+    game_interface.GameMainLoop();
 
 }
 

@@ -13,16 +13,17 @@ public:
 
     using TBoardLine = std::vector<CBoardField>;
     using TBoardFields = std::vector<TBoardLine>;
-    using TShipContainer = std::vector<std::shared_ptr<CShip>>;
+    using TShipContainer = std::vector<CShipUnit::TShipPtr>;
 
     static constexpr uint8_t BOARD_SIZE = 10u;
 
     CBoard();
     ~CBoard() = default;
 
-    void PlaceShip(CShip new_ship);
+    bool PlaceShip(CShip new_ship);
     void Print();
     CBoardField::EState ProcessInputShoot(SCoordinates shoot_coordinates);
+    bool AllShipsSunk();
 
 private:
     CBoardField& GetBoardField(const SCoordinates field_coordinates);
@@ -43,6 +44,6 @@ private:
 
 
     TBoardFields mainBoard;
-    TShipContainer ships;
+    TShipContainer ships;   //TODO: move ships to CPlayer
 
 };

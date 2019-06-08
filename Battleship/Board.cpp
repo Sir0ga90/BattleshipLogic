@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iterator>
 
 #include "Board.h"
 
@@ -7,7 +8,9 @@ CBoard::CBoard() :
     mainBoard(BOARD_SIZE, TBoardLine(BOARD_SIZE, CBoardField())) {}
 
 
-void CBoard::PlaceShip(CShip new_ship) {
+bool CBoard::PlaceShip(CShip new_ship) {
+    bool ship_placed = true;
+
     if (IsPossibleToPlaceShip(new_ship)) {
         auto ship = std::make_shared<CShip>(new_ship);
 
@@ -40,7 +43,10 @@ void CBoard::PlaceShip(CShip new_ship) {
     }
     else {
         std::cerr << "Can't place ship.\n";
+        ship_placed = false;
     }
+
+    return ship_placed;
 }
 
 
@@ -60,18 +66,31 @@ CBoardField::EState CBoard::ProcessInputShoot(SCoordinates shoot_coordinates) {
     auto cur_field_state = cur_field.GetState();
 
     if (cur_field_state == CBoardField::EState::EMPTY) {
-        cur_field.SetState(CBoardField::EState::HIT);
+        cur_field.SetState(CBoardField::EState::SHOT_DOWN);
     }
     else if (cur_field_state == CBoardField::EState::FILLED) {
         ProcessShipHit(cur_field_state, shoot_coordinates);
 
-        cur_field.SetState(CBoardField::EState::HIT);
+        cur_field.SetState(CBoardField::EState::SHOT_DOWN);
     }
     else {
         //do nothing
     }
 
     return cur_field_state;
+}
+
+bool CBoard::AllShipsSunk() {
+    bool is_all_sunk = true;
+
+    for (auto& ship : ships) {
+        if (ship->GetState() != CShip::ESate::SUNK) {
+            is_all_sunk = false;
+            break;
+        }
+    }
+
+    return is_all_sunk;
 }
 
 
@@ -91,11 +110,13 @@ void CBoard::PlaceShipUnit(const SCoordinates& unit_coordinates,
                            CShipUnit::TShipPtr& owner_ship) {
     auto& cur_field = GetBoardField(unit_coordinates);
     cur_field.SetState(CBoardField::EState::FILLED);
-    
-    CShipUnit ship_unit{};
 
-    ship_unit.SetShip(owner_ship);
+    auto ship_unit = std::make_shared<CShipUnit>();
+    auto& cur_ship = *ships.rbegin();
+
+    ship_unit->SetShip(cur_ship);
     cur_field.SetShipUnit(ship_unit);
+    cur_ship->SetShipUnit(ship_unit);
 }
 
 
@@ -181,20 +202,13 @@ bool CBoard::IsCoordinateInBoardBounds(SCoordinates::TCoord coord) {
 
 void CBoard::ProcessShipHit(CBoardField::EState& cur_field_state,
                             const SCoordinates& shoot_coordinates) {
-    const auto& cur_ship_state =
-        GetBoardField(shoot_coordinates).GetShipUnit().GetShipState();
+    const auto& ship_unit = GetBoardField(shoot_coordinates).GetShipUnit();
+    const auto& cur_ship_state = ship_unit->Hit();
 
-    switch (cur_ship_state) {
-        case CShip::ESate::SHOT_DOWN:
-        {
-            cur_field_state = CBoardField::EState::SHOT_DOWN;
-        }
-        case CShip::ESate::SUNK:
-        {
-            cur_field_state = CBoardField::EState::SUNK;
-        }
-        default:
-            break;
+    cur_field_state = CBoardField::EState::SHOT_DOWN;   // for INTACT and SHOT_DOWN
+
+    if (cur_ship_state == CShip::ESate::SUNK) {
+        cur_field_state = CBoardField::EState::SUNK;
     }
 
 }

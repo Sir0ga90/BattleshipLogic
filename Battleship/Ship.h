@@ -20,7 +20,8 @@ class CShip :
     public std::enable_shared_from_this<CShip> {
 public:
     using TShipSize = uint16_t;
-    using TShipUnitContainer = std::vector<CShipUnit>;
+    using TShipUnitPtr = std::shared_ptr<CShipUnit>;
+    using TShipUnitContainer = std::vector<TShipUnitPtr>;
 
     enum class EBoardOrientation {
         HORIZONTAL,
@@ -29,7 +30,7 @@ public:
 
     enum class ESate {
         INTACT,
-        SHOT_DOWN,
+        SHOT_DOWN = 2, // for compatibility with field state
         SUNK,
     };
 
@@ -41,7 +42,7 @@ public:
     TShipSize GetShipSize();
     SCoordinates GetPivotPoint();
     EBoardOrientation GetBoardOrientation();
-    void SetShipUnit(CShipUnit new_unit);
+    void SetShipUnit(TShipUnitPtr& new_unit);
 
     bool IsSunk();
     ESate GetState() const;
@@ -71,9 +72,10 @@ public:
     };
 
 
-    void SetShip(TShipPtr owner_ship);
+    void SetShip(TShipPtr& owner_ship);
     EState GetState() const;
     CShip::ESate GetShipState() const;
+    CShip::ESate Hit();
 
 private:
     TShipPtr ship;
