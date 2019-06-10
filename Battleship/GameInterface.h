@@ -9,6 +9,11 @@
 class CGameInterface
 {
 public:
+    enum EPlayers
+    {
+        Player1,
+        Player2
+    };
 
     using TPlayers = std::vector<CPlayer>;
 
@@ -22,5 +27,5 @@ private:
     TPlayers players;
 
     void PrintMsg(const std::string& message) const;
-    void PromtAddShips();
+    void PromptAddShips();
 };

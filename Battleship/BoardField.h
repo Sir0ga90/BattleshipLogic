@@ -22,6 +22,7 @@ public:
     };
 
     using TStateAnswerMap = std::map<EState, std::string>;
+    static const TStateAnswerMap stateAnswerMap;
 
     void SetState(EState new_state);
     EState GetState() const;
@@ -32,6 +33,5 @@ public:
 private:
     
     EState curState;
-    static const TStateAnswerMap stateAnswerMap;
     CShip::TShipUnitPtr shipUnit;
 };

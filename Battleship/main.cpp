@@ -5,12 +5,12 @@
 #include "GameInterface.h"
 
 /*Battleship draft. TODO:
- * - add main game loop;
- * - add chars to coordinates
+ * - add chars to coordinates;
+ * - add enemy board with results of shooting;
+ * - more robust check of input;
 */
 
 
-void boardPlaceShipTest();
 void testGameInterface();
 
 
@@ -23,36 +23,12 @@ int main() {
 
 
 //============================================
-void boardPlaceShipTest() {
-    CBoard board_of_one_player{};
-    const CShip dummy_ship_1{5, SCoordinates(4, 3), CShip::EBoardOrientation::HORIZONTAL};
-    const CShip dummy_ship_2{2, SCoordinates(3, 4), CShip::EBoardOrientation::VERTICAL};
-
-    CPlayer pl1{};
-
-    std::cout << "Place ship{x = 4, y = 3}: ";
-    pl1.PlaceShip(dummy_ship_1);
-
-    std::cout << "Place ship{x = 3, y = 4}: ";
-    pl1.PlaceShip(dummy_ship_2);
-
-    pl1.PrintPlayerBoard();
-
-    while (true) {
-        std::cout << static_cast<int>(pl1.ProcessInputShoot(pl1.Shoot())) << "\n";
-    }
-
-
-#ifdef _NDEBUG
-    system("pause");
-#endif
-
-}
-
-
 void testGameInterface() {
     CGameInterface game_interface{};
     game_interface.GameMainLoop();
 
+#ifdef NDEBUG
+    system("pause");
+#endif
 }
 

@@ -3,8 +3,12 @@
 #include "Player.h"
 
 
+CPlayer::CPlayer(uint16_t player_id) :
+    id{player_id} {}
+
 SCoordinates CPlayer::Shoot() {
-    std::cout << "Enter coordinates for shoot ('x y' where x, y from 0 to 9)." << "\n";
+    std::cout << "Player" << GetId()
+        << " Enter coordinates for shoot ('x y' where x, y from 0 to 9)." << "\n";
 
     SCoordinates::TCoord x = -1;
     SCoordinates::TCoord y = -1;
@@ -50,8 +54,12 @@ void CPlayer::PlaceNShips() {
 
         std::cin >> size >> x >> y >> orientation;
 
-        while ((x < 0 || x > 9) || (y < 0 || y > 9) || (orientation > 2)) {
-            std::cout << "Entered coordinates or orientation not in bounds, try again.\n";
+        while ((size < 1 || size > 4) ||
+               (x < 0 || x > 9) ||
+               (y < 0 || y > 9) ||
+               (orientation < 0 || orientation > 1)
+               ) {
+            std::cout << "Entered size, coordinates or orientation not in bounds, try again.\n";
 
             std::cin >> size >> x >> y >> orientation;
         }
@@ -63,7 +71,11 @@ void CPlayer::PlaceNShips() {
     }
 }
 
+uint16_t CPlayer::GetId() const {
+    return id;
+}
+
 
 std::string CPlayer::TranslateShootResult(CBoardField::EState state) {
-    return std::string();   //TODO
+    return CBoardField::stateAnswerMap.find(state)->second;
 }

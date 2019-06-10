@@ -26,6 +26,6 @@ CShip::TShipUnitPtr& CBoardField::GetShipUnit() {
 
 const CBoardField::TStateAnswerMap CBoardField::stateAnswerMap = {
     {EState::EMPTY, std::string{"Miss"}},
-    {EState::FILLED, std::string{"Hit"}},
-    {EState::SHOT_DOWN, std::string{"Already hit"}}
+    {EState::SHOT_DOWN, std::string{"Already hit"}},
+    {EState::SUNK, std::string{"Sunk"}}
 };

@@ -10,7 +10,7 @@
 class CPlayer
 {
 public:
-    CPlayer() = default;
+    CPlayer(uint16_t player_id);
     ~CPlayer() = default;
 
 
@@ -20,13 +20,15 @@ public:
     void PrintPlayerBoard();
     bool IsLost();
     void PlaceNShips();
+    uint16_t GetId() const;
 
     static constexpr auto MAX_SHIP_NUMBER = 2u;
 
-private:
+    static std::string TranslateShootResult(CBoardField::EState state);
 
+private:
     CBoard playerBoard;
     CBoard enemyBoard;
+    uint16_t id;
 
-    std::string TranslateShootResult(CBoardField::EState state);
 };
